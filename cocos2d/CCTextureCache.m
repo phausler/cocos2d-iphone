@@ -335,7 +335,7 @@ static CCTextureCache *sharedTextureCache;
 
 	}
 
-	return tex;
+	return (id)tex.proxy;
 }
 
 
@@ -351,7 +351,7 @@ static CCTextureCache *sharedTextureCache;
 			tex = [_textures objectForKey:key];
 		});
 		if(tex)
-			return tex;
+			return (id)tex.proxy;
 	}
 
 	tex = [[CCTexture alloc] initWithCGImage:imageref resolutionType:CCResolutionTypeUnknown];
@@ -364,7 +364,7 @@ static CCTextureCache *sharedTextureCache;
 		CCLOG(@"cocos2d: Couldn't add CGImage in CCTextureCache");
 	}
 
-	return tex;
+	return (id)tex.proxy;
 }
 
 #pragma mark TextureCache - Remove
@@ -381,10 +381,12 @@ static CCTextureCache *sharedTextureCache;
 	dispatch_sync(_dictQueue, ^{
 		NSArray *keys = [_textures allKeys];
 		for( id key in keys ) {
-			id value = [_textures objectForKey:key];
-			if( CFGetRetainCount((CFTypeRef) value) == 1 ) {
+			CCTexture *texture = [_textures objectForKey:key];
+			
+			// If the weakly retained proxy object is nil, then the texture is unreferenced.
+			if(!texture.hasProxy) {
 				CCLOG(@"cocos2d: CCTextureCache: removing unused texture: %@", key);
-                NSLog(@"Remove!");
+				NSLog(@"Remove!");
 				[_textures removeObjectForKey:key];
 			}
 		}
@@ -423,7 +425,7 @@ static CCTextureCache *sharedTextureCache;
 		tex = [_textures objectForKey:key];
 	});
 
-	return tex;
+	return (id)tex.proxy;
 }
 
 @end
@@ -446,7 +448,7 @@ static CCTextureCache *sharedTextureCache;
 	});
 
 	if(tex) {
-		return tex;
+		return (id)tex.proxy;
 	}
 
 	tex = [[CCTexture alloc] initWithPVRFile: path];
@@ -458,7 +460,7 @@ static CCTextureCache *sharedTextureCache;
 		CCLOG(@"cocos2d: Couldn't add PVRImage:%@ in CCTextureCache",path);
 	}
 
-	return tex;
+	return (id)tex.proxy;
 }
 
 @end
