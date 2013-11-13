@@ -301,10 +301,12 @@ static CCTextureCache *sharedTextureCache;
             
 			UIImage *image = [[UIImage alloc] initWithContentsOfFile:fullpath];
 			tex = [[CCTexture alloc] initWithCGImage:image.CGImage resolutionType:resolution];
+	NSLog(@"Texture loaded: %p", tex);
             
 			if( tex ){
 				dispatch_sync(_dictQueue, ^{
 					[_textures setObject: tex forKey:path];
+			NSLog(@"Texture cached: %p", tex);
 				});
 			}else{
 				CCLOG(@"cocos2d: Couldn't create texture for file:%@ in CCTextureCache", path);
@@ -355,7 +357,7 @@ static CCTextureCache *sharedTextureCache;
 	}
 
 	tex = [[CCTexture alloc] initWithCGImage:imageref resolutionType:CCResolutionTypeUnknown];
-
+	
 	if(tex && key){
 		dispatch_sync(_dictQueue, ^{
 			[_textures setObject: tex forKey:key];
@@ -383,6 +385,7 @@ static CCTextureCache *sharedTextureCache;
 		for( id key in keys ) {
 			CCTexture *texture = [_textures objectForKey:key];
 			
+			NSLog(@"texture: %@", texture);
 			// If the weakly retained proxy object is nil, then the texture is unreferenced.
 			if(!texture.hasProxy) {
 				CCLOG(@"cocos2d: CCTextureCache: removing unused texture: %@", key);
@@ -390,6 +393,7 @@ static CCTextureCache *sharedTextureCache;
 				[_textures removeObjectForKey:key];
 			}
 		}
+		NSLog(@"Purge complete.");
 	});
 }
 

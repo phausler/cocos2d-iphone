@@ -109,8 +109,6 @@
 
 -(id)forwardingTargetForSelector:(SEL)aSelector
 {
-	NSLog(@"Forwarding selector: %@", NSStringFromSelector(aSelector));
-	
 	return _texture;
 }
 
@@ -130,7 +128,7 @@ static CCTexturePixelFormat defaultAlphaPixel_format = CCTexturePixelFormat_Defa
 #pragma mark CCTexture2D - Main
 
 @implementation CCTexture {
-	CCTextureProxy *_proxy;
+	__weak CCTextureProxy *_proxy;
 }
 
 @synthesize contentSizeInPixels = _size, pixelFormat = _format, pixelWidth = _width, pixelHeight = _height, name = _name, maxS = _maxS, maxT = _maxT;
@@ -216,6 +214,7 @@ static CCTexturePixelFormat defaultAlphaPixel_format = CCTexturePixelFormat_Defa
 -(BOOL)hasProxy
 {
 	@synchronized(self){
+//		NSLog(@"hasProxy: %p", self);
 		return (_proxy != nil);
 	}
 }
