@@ -158,3 +158,12 @@
 
 @end
 
+@interface CCNode (CCBReader)
+
+/**
+ * When the reader fully decodes a CCNode it will invoke awakeFromReader: informing the node that everything associated with that node is available.
+ */
+
+- (void)awakeFromReader:(CCBReader *)reader;
+
+@end

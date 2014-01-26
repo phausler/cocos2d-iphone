@@ -45,7 +45,14 @@
 @property (nonatomic,strong) CCNode* ccbFile;
 @end
 
+@implementation CCNode (CCBReader)
 
+- (void)awakeFromReader:(CCBReader *)reader
+{
+    
+}
+
+@end
 
 @implementation CCBReader
 
@@ -988,6 +995,7 @@ static inline float readFloat(CCBReader *self)
         [node addChild:child];
     }
     
+    [node awakeFromReader:self];
     
     return node;
 }
